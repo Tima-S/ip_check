@@ -1,0 +1,55 @@
+name: GitHub Actions Build
+on: [push]
+jobs:
+  GitHub-Actions-Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Doxygen
+        run: sudo apt-get install -y doxygen
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake ../ip_check/
+          cmake --build .
+        
+      - name: Tests
+        run: |
+          cd build/ip_check/lib/ip_check_lib/
+          ctest
+        
+      - name: Package
+        run: |
+          cd build 
+          cmake --build . --target package
+          zip --junk-paths packages *.deb
+        
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.run_id }}
+          release_name: Release ${{ github.run_id }}
+          body: |
+            New Release
+          draft: false
+          prerelease: false
+          
+          
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./build/packages.zip
+          asset_name: packages.zip
+          asset_content_type: application/zip
+
