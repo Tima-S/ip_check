@@ -1,6 +1,8 @@
 #include "ip_check_lib.h"
 #include "tools.h"
 
+#include <stdexcept>
+
 using namespace std;
 
 ip_checker * ip_checker::instance = nullptr;
