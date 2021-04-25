@@ -33,3 +33,7 @@ endif (DOXYGEN_FOUND)
 
 message("Building tests...")
 add_subdirectory(tests)
+
+enable_testing()
+add_test(ip_check_lib_tests tests/ip_check_lib_tests)
+

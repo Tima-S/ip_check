@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.8)
 set(IPCHECK_VERSION_MAJOR 1)
 set(IPCHECK_VERSION_MINOR 1)
 
-set(IPCHECK_VERSION_PATCH $ENV{TRAVIS_BUILD_NUMBER})
+set(IPCHECK_VERSION_PATCH $ENV{GITHUB_RUN_ID})
 
 if(NOT IPCHECK_VERSION_PATCH) 
     set (IPCHECK_VERSION_PATCH 1)
@@ -32,4 +32,23 @@ target_include_directories(${TARGET_NAME}
     PRIVATE "lib/ip_check_lib/src"
 )
 
+if (UNIX)
+    if (NOT APPLE)
+        message("Packing...")
+
+        install(TARGETS ${TARGET_NAME} DESTINATION bin)
+
+        set(CPACK_PACKAGE_NAME ${TARGET_NAME})
+        set(CPACK_PACKAGE_VENDOR "Tim S")
+        set(CPACK_PACKAGE_CONTACT "tima-s@ya.ru")
+        set(CPACK_DEBIAN_PACKAGE_MAINTAINER "tima-s@ya.ru")
+        set(CPACK_PACKAGE_DESCRIPTION "ip check utility project.")
+
+        # now, only debian is supported.
+        # TODO: perhaps, we should support RedHat too.
+        set(CPACK_GENERATOR "DEB")
+        include(CPack)
+
+    endif()
+endif()
 
