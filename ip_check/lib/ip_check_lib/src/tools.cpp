@@ -1,5 +1,7 @@
 #include "tools.h"
 
+#include <algorithm>
+
 using namespace std;
 
 list<string> str_tools::split_str(string str, string delimiter)
