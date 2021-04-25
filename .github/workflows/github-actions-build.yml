@@ -19,7 +19,7 @@ jobs:
         
       - name: Tests
         run: |
-          cd build/ip_check/lib/ip_check_lib/
+          cd build/lib/ip_check_lib/
           ctest
         
       - name: Package
